@@ -98,6 +98,8 @@ async function fetchParcelList() {
                 });
               });
               return resolve(orders);
+            } else if (obj.error === 19) {
+              return reject(['取得包裹列表失敗 ‼️', `請重新取得蝦皮 token`]);
             } else {
               return reject(['取得包裹列表失敗 ‼️', `錯誤代號：${obj.error}`]);
             }

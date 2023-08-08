@@ -38,6 +38,19 @@ function cookieToString(cookieObject) {
   return string;
 }
 
+function isSurge() {
+  return 'undefined' !== typeof $environment && $environment['surge-version'];
+}
+
+async function isModuleStateMatches(name, enabled) {
+  return new Promise((resolve) => {
+    $httpAPI('GET', 'v1/modules', null, (data) => {
+      const enabledList = data.enabled;
+      return enabled ? resolve(enabledList.includes(name)) : resolve(!enabledList.includes(name));
+    });
+  });
+}
+
 async function preCheck() {
   return new Promise((resolve, reject) => {
     const shopeeInfo = getSaveObject('ShopeeInfo');
@@ -72,6 +85,9 @@ async function fetchParcelList() {
           if (response.status === 200) {
             const obj = JSON.parse(data);
             if (obj.error === 0) {
+              if (!obj.data?.details_list || obj.data.details_list.length === 0) {
+                return resolve(null);
+              }
               let orders = [];
               obj.data.details_list.forEach((element) => {
                 const name = element.info_card?.order_list_cards[0]?.product_info?.item_groups[0]?.items[0]?.name;
@@ -190,19 +206,30 @@ async function addToDeliveryBot(deliveryInfo) {
 
 
 (async () => {
-  console.log('ℹ️ 蝦皮包裹自動登記 v20230808.1');
+  console.log('ℹ️ 蝦皮包裹自動登記 v20230808.2');
   try {
+    if (isSurge()) {
+      const shopeeModuleEnabled = await isModuleStateMatches('蝦皮每日自動簽到', true);
+      if (!shopeeModuleEnabled) {
+        throw new Error('「蝦皮每日自動簽到」模組未啟用');
+      }
+    }
     await preCheck();
     console.log('✅ 檢查成功');
     const orders = await fetchParcelList();
-    for (const order of orders) {
-      const deliveryInfo = await getParcelDeliveryInfo(order);
-      await addToDeliveryBot(deliveryInfo);
+    if (orders) {
+      for (const order of orders) {
+        const deliveryInfo = await getParcelDeliveryInfo(order);
+        await addToDeliveryBot(deliveryInfo);
+      }
+      console.log('✅ 所有包裹資料已上傳完成')
+      // surgeNotify(
+      //   '所有包裹資料已上傳完成 ✅',
+      //   ''
+      // );
+    } else {
+      console.log('ℹ️ 目前沒有運送中的包裹');
     }
-    surgeNotify(
-      '所有包裹資料已上傳完成 ✅',
-      ''
-    );
   } catch (error) {
     handleError(error);
   }

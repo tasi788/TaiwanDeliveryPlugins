@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <div className="container mt-8 flex flex-col gap-4  items-start rounded-[1rem] shadow-xl p-4 pt-8 border border-gray-200">
+      <div className="container mt-8 flex flex-col gap-4 items-start rounded-[1rem] shadow-md p-4 pt-8 border border-gray-200">
         <h1 className="text-4xl font-bold">台灣物流機器人 UserScript</h1>
         <p>
           這個 UserScript 可以在許多購物網站中協助你快速將包裹加入機器人追蹤。
@@ -44,7 +44,7 @@ function App() {
         </details>
       </div>
 
-      <div className="container mt-8 flex flex-col gap-4  items-start rounded-[1rem] shadow-xl p-4 py-8 border border-gray-200">
+      <div className="container mt-8 flex flex-col gap-4  items-start rounded-[1rem] shadow-md p-4 py-8 border border-gray-200">
         <h1 className="text-4xl font-bold">設定</h1>
         <div>還在做</div>
       </div>

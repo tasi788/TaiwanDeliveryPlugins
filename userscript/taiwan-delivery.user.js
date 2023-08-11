@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
@@ -14,7 +14,7 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // ==/UserScript==
-(function () {
+(async function () {
   // Add CSS Style
   const style = document.createElement("style");
   style.innerHTML = `
@@ -88,17 +88,25 @@
   ) {
     // inject config function
     localStorage.setItem("userscript-install", "true");
-    window.dispatchEvent(
-      new CustomEvent("api-key-localstorage-changed", {
-        detail: {
-          storage: localStorage.getItem("api-key"),
-        },
-      })
+    localStorage.setItem(
+      "api-key",
+      JSON.stringify(await GM.getValue("apiKey", ""))
     );
-    window.addEventListener("api-key-localstorage-changed", (event) => {
-      let apiKey = event.detail.storage;
-      GM.setValue("apiKey", apiKey);
-      alert("[script] 已儲存 API Key");
+    new MutationObserver((mutations) => {
+      //#api-key
+      async function watchAPIkey(e) {
+        await GM.setValue("apiKey", e.target.value);
+        console.log("[APIKEY]", e.target.value);
+      }
+      document
+        .querySelector("#api-key")
+        .removeEventListener("change", watchAPIkey);
+      document
+        .querySelector("#api-key")
+        .addEventListener("change", watchAPIkey);
+    }).observe(document.querySelector("body"), {
+      childList: true,
+      subtree: true,
     });
   }
 

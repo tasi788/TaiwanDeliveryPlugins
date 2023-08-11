@@ -1,6 +1,7 @@
 import Box from "./components/Box";
 import Title from "./components/Title";
 import Details from "./components/Details";
+import Settings from "./components/Settings";
 function App() {
   return (
     <>
@@ -53,10 +54,7 @@ function App() {
           </ul>
         </Details>
       </Box>
-      <Box>
-        <Title>設定</Title>
-        <div>還在做</div>
-      </Box>
+      <Settings />
     </>
   );
 }

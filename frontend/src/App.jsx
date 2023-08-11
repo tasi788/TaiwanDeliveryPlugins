@@ -2,6 +2,7 @@ import Box from "./components/Box";
 import Title from "./components/Title";
 import Details from "./components/Details";
 import Settings from "./components/Settings";
+import Tag from "./components/Tag";
 import { useLocalStorage } from "usehooks-ts";
 import { useState } from "react";
 function App() {
@@ -27,23 +28,34 @@ function App() {
       <Box>
         <Title>UserScript（測試版）</Title>
         <p>在購物網站中協助你快速將包裹加入機器人追蹤。</p>
-        <a
-          href="https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js"
-          target="_blank"
-          rel="noreferrer"
-          className={`inline-flex px-4 py-1.5 rounded-[.5em] shadow-xl text-white gap-2 items-center justify-center frosted-glass bg-opacity-30 hover:bg-opacity-30 ${
-            isUserScriptInstalled
-              ? "text-opacity-70 bg-green-500 hover:bg-green-600"
-              : "bg-blue-500 hover:bg-blue-600"
-          }`}
-        >
-          {isUserScriptInstalled ? (
-            <i className="bx bx-check text-xl"></i>
-          ) : (
-            <i className="bx bx-plus text-xl"></i>
-          )}
-          {isUserScriptInstalled ? "已安裝" : "安裝"}
-        </a>
+        <div className="flex gap-2">
+          <a
+            href="https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js"
+            target="_blank"
+            rel="noreferrer"
+            className={`inline-flex px-4 py-1.5 rounded-[.5em] shadow-xl text-white gap-2 items-center justify-center bg-opacity-30 hover:bg-opacity-30 ${
+              isUserScriptInstalled
+                ? "text-opacity-70 bg-green-500 hover:bg-green-600"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {isUserScriptInstalled ? (
+              <i className="bx bx-check text-xl"></i>
+            ) : (
+              <i className="bx bx-plus text-xl"></i>
+            )}
+            {isUserScriptInstalled ? "已安裝" : "安裝"}
+          </a>
+          <a
+            href="https://github.com/tasi788/TaiwanDeliveryPlugins/issues/new"
+            target="_blank"
+            rel="noreferrer"
+            className={`inline-flex px-4 py-1.5 rounded-[.5em] shadow-xl text-white gap-2 items-center justify-center bg-opacity-10 hover:bg-opacity-20 active:bg-opacity-5 bg-white`}
+          >
+            <i className="bx bx-bug text-xl"></i>
+            回報錯誤
+          </a>
+        </div>
         <div className="text-sm text-gray-400">
           仍在測試中，若有問題請至 GitHub 回報。
         </div>
@@ -65,42 +77,43 @@ function App() {
                     href="https://chrome.google.com/webstore/detail/jinjaccalgkegednnccohejagnlnfdag"
                     className="link"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     Violentmonkey (Chrome、Edge)
                   </a>
-                  <div className="frosted-glass inline-block text-white rounded-full p-0.5 px-2 text-sm ml-2">
-                    推薦
-                  </div>
+                  <Tag>推薦</Tag>
                 </li>
                 <li>
                   <a
                     href="https://addons.mozilla.org/firefox/addon/violentmonkey/"
                     className="link"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     Violentmonkey (Firefox)
                   </a>
-                  <div className="frosted-glass inline-block text-white rounded-full p-0.5 px-2 text-sm ml-2">
-                    推薦
-                  </div>
+                  <Tag>推薦</Tag>
                 </li>
                 <li>
                   <a
                     href="https://apps.apple.com/tw/app/userscripts/id1463298887"
                     className="link"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     Userscripts (Safari)
                   </a>
-                  <div className="frosted-glass inline-block text-white rounded-full p-0.5 px-2 text-sm ml-2">
-                    推薦
-                  </div>
+                  <Tag>推薦</Tag>
+                  <Tag>iOS</Tag>
+                  <Tag>iPadOS</Tag>
+                  <Tag>macOS</Tag>
                 </li>
                 <li>
                   <a
                     href="https://chrome.google.com/webstore/detail/gcalenpjmijncebpfijmoaglllgpjagf"
                     className="link"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     Tampermonkey Beta (Chrome、Edge)
                   </a>
@@ -110,6 +123,7 @@ function App() {
                     href="https://firefox.tampermonkey.net/firefox-current-beta.xpi"
                     className="link"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     Tampermonkey Beta (Firefox)
                   </a>
@@ -127,6 +141,22 @@ function App() {
         </Details>
       </Box>
       <Settings />
+      <div className="text-gray-400 text-sm text-center pb-8">
+        Made with{" "}
+        <a href="https://pancake.tw" target="_blank" rel="noreferrer">
+          🥞
+        </a>{" "}
+        by{" "}
+        <a
+          href="https://gnehs.net"
+          target="_blank"
+          rel="noreferrer"
+          className="link"
+        >
+          gnehs
+        </a>
+        .
+      </div>
     </>
   );
 }

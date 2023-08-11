@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.3.1
+// @version      0.3.2
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -57,11 +57,9 @@
   }
   .🥞台灣物流機器人:hover {
     background-color: #4a4b5c;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   }
   .🥞台灣物流機器人:active {
     background-color: #22232b;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
   }
   .🥞toast-container,
   .🥞toast-container * {
@@ -79,16 +77,17 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-start;
-    gap: 8px;
-    padding: 8px;
+    gap: 16px;
+    padding: 16px;
   }
   .🥞toast{
     padding: 16px 24px;
+    padding-left: 16px;
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.8);
     color: #111;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 1em;
+    font-family: Lato, 'Noto Sans TC', sans-serif;
+    font-size: 14px;
     text-align: left;
     transition: all 0.1s ease;
     pointer-events: all;
@@ -96,37 +95,59 @@
     width: 280px;
     line-height: 1.5em;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-center;
+    justify-content: flex-start;
+    gap: 16px;
+    filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.1));
   }
   .🥞toast.🥞dark{
     background-color: rgba(0, 0, 0, 0.4);
     color: #fff;
   }
   .🥞toast.🥞exit{
-    animation: toast-out 0.5s linear;
+    animation: toast-out .5s ease;
   }
   .🥞toast-title{
     font-weight: 700;
   }
+  .🥞toast-icon{
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+  }
+  .🥞toast-icon i{
+    font-size: 24px;
+  }
+  .🥞toast.🥞dark .🥞toast-icon{
+    background-color: rgba(255, 255, 255, 0.1);
+  }
   @keyframes toast {
     0% {
-      transform: translateX(100%);
+      transform: translateY(96px);
       opacity: 0;
     }
     100% {
-      transform: translateX(0);
+      transform: translateY(0);
       opacity: 1;
     }
   }
   @keyframes toast-out {
     0% {
-      transform: translateX(0);
+      transform: translateY(0);
       opacity: 1;
     }
     50% {
       max-height: 96px;
+      padding: 16px 24px;
     }
     50%, 100% {
-      transform: translateX(100%);
+      transform: translateY(-96px);
       opacity: 0;
     }
     100% {
@@ -145,7 +166,7 @@
   }
   addStyleSheet("https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css");
   addStyleSheet(
-    "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
+    "https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap"
   );
   async function track(service, track_id, note) {
     let apiKey = await GM.getValue("apiKey", "");
@@ -178,7 +199,7 @@
       toast(`無法加入已配達的包裹`);
       return;
     }
-    toast(`已將「${track_id}」加入追蹤`);
+    toast(`已將「${track_id}」加入追蹤`, "success");
     return data;
   }
   //-
@@ -199,7 +220,7 @@
       if (apiKeyField) {
         apiKeyField.addEventListener("change", async function (e) {
           await GM.setValue("apiKey", e.target.value);
-          toast("已儲存 API Key");
+          toast("已儲存 API Key", "success");
         });
         inputObserver.disconnect();
       }
@@ -225,7 +246,10 @@
     ) {
       toast.classList.add("🥞dark");
     }
-    toast.innerHTML = `<div class="🥞toast-title">通知</div><div class="🥞toast-content">${message}</div>`;
+    let icon = `<i class='bx bx-package' ></i>`;
+    if (type === "success") icon = `<i class='bx bx-check-circle' ></i>`;
+    if (type === "loading") icon = `<i class='bx bx-loader bx-spin' ></i>`;
+    toast.innerHTML = `<div class="🥞toast-icon">${icon}</div><div class="🥞toast-content"><div class="🥞toast-title">台灣物流機器人</div><div class="🥞toast-message">${message}</div></div>`;
     toastContainer.appendChild(toast);
     let removeTimeout = setTimeout(() => {
       remove();
@@ -326,7 +350,10 @@
             trackButton.innerHTML = "<i class='bx bx-package' ></i> 追蹤包裹";
             trackButton.style = `width: 150px;height: 40px;border-radius: 2px;font-size: 14px;`;
             trackButton.addEventListener("click", async () => {
-              let { remove: removeLoading } = toast("正在查詢訂單資訊⋯");
+              let { remove: removeLoading } = toast(
+                "正在查詢訂單資訊⋯",
+                "loading"
+              );
               // https://shopee.tw/api/v4/order/get_order_detail?order_id=143807054231066
               let orderDetail = await fetch(
                 `https://shopee.tw/api/v4/order/get_order_detail?order_id=${orderID}`,

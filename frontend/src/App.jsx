@@ -25,7 +25,7 @@ function App() {
         <h1 className="text-2xl font-bold">台灣物流機器人</h1>
       </div>
       <Box>
-        <Title>UserScript</Title>
+        <Title>UserScript（測試版）</Title>
         <p>在購物網站中協助你快速將包裹加入機器人追蹤。</p>
         <a
           href="https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js"
@@ -44,7 +44,7 @@ function App() {
           )}
           {isUserScriptInstalled ? "已安裝" : "安裝"}
         </a>
-        <div className="text-sm text-gray-400 mt-2">
+        <div className="text-sm text-gray-400">
           仍在測試中，若有問題請至 GitHub 回報。
         </div>
       </Box>

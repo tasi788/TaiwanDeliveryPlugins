@@ -14,8 +14,8 @@ export default function Settings() {
       ) : (
         <>
           <Input
-            label="API Key"
-            placeholder="請輸入 API Key"
+            label="API 金鑰"
+            placeholder="請在此貼上機器人給你的 API 金鑰"
             value={apiKey}
             type="password"
             id="api-key"

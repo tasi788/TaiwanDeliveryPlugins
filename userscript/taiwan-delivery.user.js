@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1
+// @version      0.1.1
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
-// @icon         <$ICON$>
+// @icon         https://logistics-front.sudo.host/icon.jpg
 // @pancake      https://pancake.tw
 // @grant        GM_getValue
 // @grant        GM_setValue

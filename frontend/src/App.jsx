@@ -17,7 +17,9 @@ function App() {
           {count < 7 ? (
             <i className="bx bx-package text-3xl" />
           ) : (
-            <span className="text-3xl">🥞</span>
+            <a className="text-3xl" href="https://pancake.tw" target="_blank">
+              🥞
+            </a>
           )}
         </div>
         <h1 className="text-2xl font-bold">台灣物流機器人</h1>

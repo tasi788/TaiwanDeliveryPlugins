@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.2.5
+// @version      0.3.0
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
 // @match        https://ecvip.pchome.com.tw/web/order/all*
 // @match        https://ecvip.pchome.com.tw/m/order/all*
+// @match        https://shopee.tw/user/purchase/*
 // @match        https://logistics-front.sudo.host/*
 // @match        http://localhost:5173/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
@@ -41,26 +42,30 @@
     border-radius: 4px;
     padding: 8px 16px;
     font-size: 12px;
-    background-color: #444;
+    background-color: #2e2f39;
     color: #fff;
     cursor: pointer;
-    margin-top: 0.5em;
     font-family: 'Noto Sans TC', sans-serif;
     align-items: center;
     justify-content: center;
     gap: 0.25em;
     transition: all 0.1s ease;
+    box-sizing: border-box;
   }
   .🥞台灣物流機器人 > i{
     font-size: 1.25em;
   }
   .🥞台灣物流機器人:hover {
-    background-color: #222;
+    background-color: #4a4b5c;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   }
   .🥞台灣物流機器人:active {
-    background-color: #000;
+    background-color: #22232b;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  }
+  .🥞toast-container,
+  .🥞toast-container * {
+    box-sizing: border-box;
   }
   .🥞toast-container {
     position: fixed;
@@ -97,7 +102,7 @@
     color: #fff;
   }
   .🥞toast.🥞exit{
-    animation: toast-out 0.5s ease;
+    animation: toast-out 0.5s linear;
   }
   .🥞toast-title{
     font-weight: 700;
@@ -221,13 +226,18 @@
     }
     toast.innerHTML = `<div class="🥞toast-title">通知</div><div class="🥞toast-content">${message}</div>`;
     toastContainer.appendChild(toast);
-    setTimeout(() => {
+    let removeTimeout = setTimeout(() => {
+      remove();
+    }, timeout);
+    function remove() {
+      removeTimeout && clearTimeout(removeTimeout);
       toast.classList.add("🥞exit");
       toast.onanimationend = () => {
         toast.style.display = "none";
         toast.remove();
       };
-    }, timeout);
+    }
+    return { remove };
   }
   //-
   // PChome 24h
@@ -245,6 +255,7 @@
           logisticsLink.classList.add("tracked");
           let trackButton = document.createElement("button");
           trackButton.classList.add("🥞台灣物流機器人");
+          trackButton.style = "margin-top: 0.5em;";
           trackButton.innerHTML = "<i class='bx bx-package' ></i> 追蹤包裹";
           trackButton.addEventListener("click", () => {
             let href = logisticsLink.href;
@@ -289,6 +300,78 @@
           logisticsLink.parentElement.appendChild(trackButton);
         });
     }).observe(document.querySelector("#listOrder"), {
+      childList: true,
+      subtree: true,
+    });
+  }
+  //-
+  // Shopee
+  //-
+  if (location.href.startsWith("https://shopee.tw/user/purchase/")) {
+    new MutationObserver((mutations) => {
+      document
+        .querySelectorAll(".hiXKxx:not(.tracked)")
+        .forEach((orderItem) => {
+          try {
+            let orderHref = orderItem.querySelector(
+              'a[href^="/user/purchase/order/"]'
+            ).href;
+            let orderID = orderHref.match(/order\/(\d+)/)[1];
+            orderItem.classList.add("tracked");
+            let trackButtonContainer = document.createElement("div");
+            trackButtonContainer.classList.add("PgtIur");
+            let trackButton = document.createElement("button");
+            trackButton.classList.add("🥞台灣物流機器人");
+            trackButton.innerHTML = "<i class='bx bx-package' ></i> 追蹤包裹";
+            trackButton.style = `width: 150px;height: 40px;border-radius: 2px;font-size: 14px;`;
+            trackButton.addEventListener("click", async () => {
+              let { remove: removeLoading } = toast("正在查詢訂單資訊⋯");
+              // https://shopee.tw/api/v4/order/get_order_detail?order_id=143807054231066
+              let orderDetail = await fetch(
+                `https://shopee.tw/api/v4/order/get_order_detail?order_id=${orderID}`,
+                {
+                  withCredentials: true,
+                  credentials: "include",
+                }
+              ).then((res) => res.json());
+              let carrier = orderDetail.data.shipping.fulfilment_carrier.text;
+              let id = orderDetail.data.shipping.tracking_number;
+              let shop_name =
+                orderDetail.data.info_card.parcel_cards[0].shop_info.shop_name;
+              let note = `蝦皮|${shop_name}`;
+              switch (carrier) {
+                case "蝦皮店到店":
+                  await track("Shopeetw", id, note);
+                  break;
+                case "中華郵政":
+                  await track("Ipost", id, note);
+                  break;
+                case "全家":
+                case "全家冷凍超取(不寄送離島地區)":
+                  await track("FamiMart", id, note);
+                  break;
+                case "萊爾富":
+                  await track("HiLife", id, note);
+                  break;
+                case "7-ELEVEN":
+                case "蝦皮海外 - 7-11":
+                case "蝦皮韓國 - 7-11":
+                  await track("SevenEleven", id, note);
+                  break;
+                default:
+                  toast(`目前不支援這家貨運商：${carrier}`);
+              }
+              removeLoading();
+            });
+            trackButtonContainer.appendChild(trackButton);
+            orderItem
+              .querySelector(".EOjXew")
+              .appendChild(trackButtonContainer);
+          } catch (e) {
+            console.error(e);
+          }
+        });
+    }).observe(document.querySelector("body"), {
       childList: true,
       subtree: true,
     });

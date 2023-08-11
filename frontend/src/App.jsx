@@ -120,8 +120,9 @@ function App() {
         </Details>
         <Details title="目前支援的網站有哪些？">
           <ul className="list-disc list-inside">
-            <li>PChome 24h（支援大部分貨運商）</li>
-            <li>PChome 24h 手機網頁版（支援大部分貨運商）</li>
+            <li>PChome 24h</li>
+            <li>PChome 24h 手機網頁版</li>
+            <li>蝦皮</li>
           </ul>
         </Details>
       </Box>

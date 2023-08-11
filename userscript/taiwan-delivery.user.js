@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
+// @match        https://logistics-front.sudo.host/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
 // @pancake      https://pancake.tw
 // @grant        GM_getValue
@@ -77,6 +78,26 @@
     alert(`已將「${track_id}」加入追蹤`);
     return data;
   }
+  //-
+  // Config
+  //-
+  if (location.href.startsWith("https://logistics-front.sudo.host/")) {
+    // inject config function
+    localStorage.setItem("userscript-install", "true");
+    window.dispatchEvent(
+      new CustomEvent("api-key-localstorage-changed", {
+        detail: {
+          storage: localStorage.getItem("api-key"),
+        },
+      })
+    );
+    window.addEventListener("api-key-localstorage-changed", (event) => {
+      let apiKey = event.detail.storage;
+      GM.setValue("apiKey", apiKey);
+      alert("[script] 已儲存 API Key");
+    });
+  }
+
   //-
   // PChome 24h
   //-

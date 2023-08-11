@@ -42,7 +42,10 @@ function App() {
         <Title>常見問題</Title>
         <Details title="沒有跳出安裝畫面？">
           <ul className="list-disc list-inside">
-            <li>確認瀏覽器是否有安裝 UserScript 相關擴充套件</li>
+            <li>
+              確認瀏覽器是否有安裝 UserScript
+              相關擴充套件，安裝後再次點選上方安裝按鈕即可正常進行安裝。
+            </li>
             <li>
               可以透過下列擴充套件使用 UserScript，請根據你的瀏覽器選擇：
               <ul className="list-disc list-inside pl-8">

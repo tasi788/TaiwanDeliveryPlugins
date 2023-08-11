@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1.4
+// @version      0.1.5
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
@@ -92,19 +92,17 @@
       "api-key",
       JSON.stringify(await GM.getValue("apiKey", ""))
     );
-    new MutationObserver((mutations) => {
-      //#api-key
-      async function watchAPIkey(e) {
-        await GM.setValue("apiKey", e.target.value);
-        console.log("[APIKEY]", e.target.value);
+    let inputObserver = new MutationObserver((mutations) => {
+      let apiKeyField = document.querySelector("#api-key");
+      if (apiKeyField) {
+        apiKeyField.addEventListener("change", async function (e) {
+          await GM.setValue("apiKey", e.target.value);
+          console.log("[APIKEY]", e.target.value);
+        });
+        inputObserver.disconnect();
       }
-      document
-        .querySelector("#api-key")
-        .removeEventListener("change", watchAPIkey);
-      document
-        .querySelector("#api-key")
-        .addEventListener("change", watchAPIkey);
-    }).observe(document.querySelector("body"), {
+    });
+    inputObserver.observe(document.querySelector("body"), {
       childList: true,
       subtree: true,
     });

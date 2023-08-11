@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.2.1
+// @version      0.2.2
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -90,6 +90,10 @@
     width: 280px;
     line-height: 1.5em;
     overflow: hidden;
+  }
+  .🥞toast.🥞dark{
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
   }
   .🥞toast.🥞exit{
     animation: toast-out 0.5s ease;
@@ -207,6 +211,12 @@
   function toast(message, type = "info", timeout = 3000) {
     let toast = document.createElement("div");
     toast.className = `🥞toast 🥞toast-${type} frosted-glass`;
+    if (
+      location.href.startsWith("https://logistics-front.sudo.host/") ||
+      location.href.startsWith("http://localhost:5173/")
+    ) {
+      toast.classList.add("🥞dark");
+    }
     toast.innerHTML = `<div class="🥞toast-title">通知</div><div class="🥞toast-content">${message}</div>`;
     toastContainer.appendChild(toast);
     setTimeout(() => {

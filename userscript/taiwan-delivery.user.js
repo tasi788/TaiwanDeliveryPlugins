@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.2.2
+// @version      0.2.3
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -73,8 +73,8 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-start;
-    gap: 1em;
-    padding: 1em;
+    gap: 8px;
+    padding: 8px;
   }
   .🥞toast{
     padding: 16px 24px;
@@ -117,13 +117,15 @@
       opacity: 1;
     }
     50% {
+      max-height: 96px;
+    }
+    50%, 100% {
       transform: translateX(100%);
       opacity: 0;
-      max-height: 80px;
     }
     100% {
       max-height: 0;
-      opacity: 0;
+      padding: 0;
     }
   }
 `;

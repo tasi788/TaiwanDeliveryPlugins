@@ -86,6 +86,18 @@ function App() {
                 </li>
                 <li>
                   <a
+                    href="https://apps.apple.com/tw/app/userscripts/id1463298887"
+                    className="link"
+                    target="_blank"
+                  >
+                    Userscripts (Safari)
+                  </a>
+                  <div className="frosted-glass inline-block text-white rounded-full p-0.5 px-2 text-sm ml-2">
+                    推薦
+                  </div>
+                </li>
+                <li>
+                  <a
                     href="https://chrome.google.com/webstore/detail/gcalenpjmijncebpfijmoaglllgpjagf"
                     className="link"
                     target="_blank"

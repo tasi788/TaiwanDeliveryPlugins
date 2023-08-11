@@ -4,7 +4,7 @@
 
 @layer components {
   .frosted-glass {
-    --bg-board-color: rgba(59, 208, 216, 0.1);
+    --bg-board-color: lch(76.67 38.33 203.29 / 0.1);
     position: relative;
     backdrop-filter: blur(10px);
     background: linear-gradient(

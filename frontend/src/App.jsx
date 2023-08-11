@@ -7,7 +7,7 @@ function App() {
   const [isUserScriptInstalled] = useLocalStorage("userscript-install", false);
   return (
     <>
-      <div className="flex items-center gap-2 mt-16 mb-4 container p-0">
+      <div className="flex items-center gap-2 md:mt-4 mb-4 container p-0">
         <div className="w-12 h-12 frosted-glass rounded-[1rem] flex items-center justify-center">
           <i className="bx bx-package text-3xl"></i>
         </div>

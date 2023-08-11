@@ -3,13 +3,22 @@ import Title from "./components/Title";
 import Details from "./components/Details";
 import Settings from "./components/Settings";
 import { useLocalStorage } from "usehooks-ts";
+import { useState } from "react";
 function App() {
   const [isUserScriptInstalled] = useLocalStorage("userscript-install", false);
+  const [count, setCount] = useState(0);
   return (
     <>
       <div className="flex items-center gap-2 md:mt-4 mb-4 container p-0">
-        <div className="w-12 h-12 frosted-glass rounded-[1rem] flex items-center justify-center">
-          <i className="bx bx-package text-3xl"></i>
+        <div
+          className="w-12 h-12 frosted-glass rounded-[1rem] flex items-center justify-center active:scale-90 transition-transform"
+          onClick={() => setCount(count + 1)}
+        >
+          {count < 7 ? (
+            <i className="bx bx-package text-3xl" />
+          ) : (
+            <span className="text-3xl">🥞</span>
+          )}
         </div>
         <h1 className="text-2xl font-bold">台灣物流機器人</h1>
       </div>

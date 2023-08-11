@@ -10,7 +10,10 @@ export default function Settings() {
     <Box>
       <Title>設定</Title>
       {!isUserScriptInstalled ? (
-        <div>請先安裝 UserScript。</div>
+        <div className="text-gray-200 flex items-center flex-col justify-center w-full">
+          <i className="bx bx-error text-3xl"></i>
+          未偵測到 UserScript，請先安裝 UserScript 或重新整理網頁。
+        </div>
       ) : (
         <>
           <Input

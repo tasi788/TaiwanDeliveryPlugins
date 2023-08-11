@@ -10,7 +10,7 @@ export default function Settings() {
     <Box>
       <Title>設定</Title>
       {!isUserScriptInstalled ? (
-        <div className="mb-4">請先安裝 UserScript，才能使用 API Key 設定。</div>
+        <div>請先安裝 UserScript。</div>
       ) : (
         <>
           <Input

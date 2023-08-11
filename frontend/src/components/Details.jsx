@@ -30,7 +30,7 @@ export default function Details({ children, title }) {
             initial={{ height: 0, opacity: 0, y: -10 }}
             animate={{ height: "auto", opacity: 1, y: 0 }}
             exit={{ height: 0, opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
           >
             <div className="p-4 pt-0">{children}</div>
           </motion.div>

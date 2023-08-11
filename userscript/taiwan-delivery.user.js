@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.2.0
+// @version      0.2.1
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -37,8 +37,9 @@
   .🥞台灣物流機器人 {
     all: unset;
     display: inline-flex;
-    border-radius: 0.5em;
-    padding: 0.25em 0.5em;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 12px;
     background-color: #444;
     color: #fff;
     cursor: pointer;
@@ -78,7 +79,7 @@
   .🥞toast{
     padding: 16px 24px;
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.6);
     color: #111;
     font-family: 'Noto Sans TC', sans-serif;
     font-size: 1em;
@@ -164,7 +165,7 @@
       toast(`無法加入已配達的包裹`);
       return;
     }
-    alert(`已將「${track_id}」加入追蹤`);
+    toast(`已將「${track_id}」加入追蹤`);
     return data;
   }
   //-

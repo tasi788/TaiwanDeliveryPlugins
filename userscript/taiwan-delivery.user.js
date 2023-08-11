@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.3.0
+// @version      0.3.1
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -150,8 +150,9 @@
   async function track(service, track_id, note) {
     let apiKey = await GM.getValue("apiKey", "");
     if (apiKey === "") {
-      apiKey = prompt("請輸入 API Key");
-      await GM.setValue("apiKey", apiKey);
+      if (confirm("尚未設定 API Key，是否前往設定？")) {
+        location.href = "https://logistics-front.sudo.host/";
+      }
     }
     let res = await fetch("https://logistics.sudo.host/packages/query", {
       method: "POST",

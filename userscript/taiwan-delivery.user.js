@@ -7,7 +7,7 @@
 // @website      https://logistics-front.sudo.host/
 // @match        https://ecvip.pchome.com.tw/web/order/all*
 // @match        https://ecvip.pchome.com.tw/m/order/all*
-// @match        https://shopee.tw/user/purchase/*
+// @match        https://shopee.tw/*
 // @match        https://logistics-front.sudo.host/*
 // @match        http://localhost:5173/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
@@ -332,7 +332,7 @@
   //-
   // Shopee
   //-
-  if (location.href.startsWith("https://shopee.tw/user/purchase/")) {
+  if (location.href.startsWith("https://shopee.tw/")) {
     new MutationObserver((mutations) => {
       document
         .querySelectorAll(".hiXKxx:not(.tracked)")

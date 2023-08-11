@@ -364,9 +364,7 @@
               removeLoading();
             });
             trackButtonContainer.appendChild(trackButton);
-            orderItem
-              .querySelector(".EOjXew")
-              .appendChild(trackButtonContainer);
+            orderItem.querySelector(".EOjXew").prepend(trackButtonContainer);
           } catch (e) {
             console.error(e);
           }

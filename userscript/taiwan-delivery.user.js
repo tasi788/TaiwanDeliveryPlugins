@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
 // @match        https://logistics-front.sudo.host/*
+// @match        http://localhost:5173/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
 // @pancake      https://pancake.tw
 // @grant        GM_getValue
@@ -81,7 +82,10 @@
   //-
   // Config
   //-
-  if (location.href.startsWith("https://logistics-front.sudo.host/")) {
+  if (
+    location.href.startsWith("https://logistics-front.sudo.host/") ||
+    location.href.startsWith("http://localhost:5173/")
+  ) {
     // inject config function
     localStorage.setItem("userscript-install", "true");
     window.dispatchEvent(

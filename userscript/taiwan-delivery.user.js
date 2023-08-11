@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.2.4
+// @version      0.2.5
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
 // @match        https://ecvip.pchome.com.tw/web/order/all*
+// @match        https://ecvip.pchome.com.tw/m/order/all*
 // @match        https://logistics-front.sudo.host/*
 // @match        http://localhost:5173/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
@@ -192,7 +193,6 @@
       if (apiKeyField) {
         apiKeyField.addEventListener("change", async function (e) {
           await GM.setValue("apiKey", e.target.value);
-          console.log("[APIKEY]", e.target.value);
           toast("已儲存 API Key");
         });
         inputObserver.disconnect();
@@ -223,19 +223,24 @@
     toastContainer.appendChild(toast);
     setTimeout(() => {
       toast.classList.add("🥞exit");
-      setTimeout(() => {
+      toast.onanimationend = () => {
         toast.style.display = "none";
         toast.remove();
-      }, 500);
+      };
     }, timeout);
   }
   //-
   // PChome 24h
   //-
-  if (location.href.startsWith("https://ecvip.pchome.com.tw/web/order/all")) {
+  if (
+    location.href.startsWith("https://ecvip.pchome.com.tw/web/order/all") ||
+    location.href.startsWith("https://ecvip.pchome.com.tw/m/order/all")
+  ) {
     new MutationObserver((mutations) => {
       document
-        .querySelectorAll(".link_logistics:not(.tracked)")
+        .querySelectorAll(
+          '.link_logistics:not(.tracked),a:not(.tracked)[style="text-decoration: underline ;color:0099cc"]'
+        )
         .forEach((logisticsLink) => {
           logisticsLink.classList.add("tracked");
           let trackButton = document.createElement("button");

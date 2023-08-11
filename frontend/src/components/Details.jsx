@@ -27,9 +27,10 @@ export default function Details({ children, title }) {
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0, y: -10 }}
-            animate={{ height: "auto", opacity: 1, y: 0 }}
-            exit={{ height: 0, opacity: 0, y: -10 }}
+            className="overflow-hidden"
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
             transition={{ duration: 0.15 }}
           >
             <div className="p-4 pt-0">{children}</div>

@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .frosted-glass {
+    --bg-board-color: rgba(59, 208, 216, 0.1);
+    position: relative;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(
+      140deg,
+      var(--bg-board-color) 28.7%,
+      color-mix(in lch, var(--bg-board-color) 30%, transparent)
+    );
+    box-shadow: rgba(255, 255, 255, 0.12) 1px 1px 1px 0px inset,
+      rgba(255, 255, 255, 0.02) -1px -1px 1px 0px inset;
+    @apply drop-shadow-lg;
+  }
+
+  .link {
+    @apply text-blue-200 underline hover:opacity-75 active:opacity-50;
+  }
+}

@@ -1,8 +1,8 @@
 export default function Details({ children, title }) {
   return (
-    <details className="bg-blue-500 bg-opacity-5 rounded-[.5em] w-full group">
+    <details className="bg-blue-500 bg-opacity-5 rounded-[.5em] w-full group frosted-glass">
       <summary className="text-blue-100 font-bold py-2 px-4 rounded cursor-pointer flex items-center justify-between">
-        <div className="text-lg">{title}</div>
+        <div>{title}</div>
         <svg
           className="w-4 h-4 transform group-open:rotate-180 transition-transform"
           viewBox="0 0 20 20"

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.1.5
+// @version      0.2.0
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @match        https://ecvip.pchome.com.tw/web/order/all*
@@ -13,11 +13,26 @@
 // @grant        GM_setValue
 // @grant        GM.getValue
 // @grant        GM.setValue
+// @updateURL    https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js
+// @downloadURL  https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js
 // ==/UserScript==
 (async function () {
   // Add CSS Style
   const style = document.createElement("style");
   style.innerHTML = `
+  .frosted-glass {
+    --bg-board-color: lch(76.67 38.33 203.29 / 0.1);
+    position: relative;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(
+      140deg,
+      var(--bg-board-color) 28.7%,
+      color-mix(in lch, var(--bg-board-color) 30%, transparent)
+    );
+    box-shadow: rgba(255, 255, 255, 0.12) 1px 1px 1px 0px inset,
+      rgba(255, 255, 255, 0.02) -1px -1px 1px 0px inset;
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.2));
+  }
   .🥞台灣物流機器人 {
     all: unset;
     display: inline-flex;
@@ -43,6 +58,67 @@
   .🥞台灣物流機器人:active {
     background-color: #000;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  }
+  .🥞toast-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 1em;
+    padding: 1em;
+  }
+  .🥞toast{
+    padding: 16px 24px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #111;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 1em;
+    text-align: left;
+    transition: all 0.1s ease;
+    pointer-events: all;
+    animation: toast 0.25s ease;
+    width: 280px;
+    line-height: 1.5em;
+    overflow: hidden;
+  }
+  .🥞toast.🥞exit{
+    animation: toast-out 0.5s ease;
+  }
+  .🥞toast-title{
+    font-weight: 700;
+  }
+  @keyframes toast {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes toast-out {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(100%);
+      opacity: 0;
+      max-height: 80px;
+    }
+    100% {
+      max-height: 0;
+      opacity: 0;
+    }
   }
 `;
   document.head.appendChild(style);
@@ -74,8 +150,19 @@
         service,
         note,
       }),
+    }).catch((e) => {
+      console.error(e);
+      return e;
     });
     let data = await res.json();
+    if (data.detail) {
+      toast(data.detail, "error");
+      return;
+    }
+    if (data.message === "貨物已配達") {
+      toast(`無法加入已配達的包裹`);
+      return;
+    }
     alert(`已將「${track_id}」加入追蹤`);
     return data;
   }
@@ -98,6 +185,7 @@
         apiKeyField.addEventListener("change", async function (e) {
           await GM.setValue("apiKey", e.target.value);
           console.log("[APIKEY]", e.target.value);
+          toast("已儲存 API Key");
         });
         inputObserver.disconnect();
       }
@@ -108,6 +196,24 @@
     });
   }
 
+  //-
+  // Notification Center
+  //-
+  const toastContainer = document.createElement("div");
+  toastContainer.className = "🥞toast-container";
+  document.body.appendChild(toastContainer);
+  function toast(message, type = "info", timeout = 3000) {
+    let toast = document.createElement("div");
+    toast.className = `🥞toast 🥞toast-${type} frosted-glass`;
+    toast.innerHTML = `<div class="🥞toast-title">通知</div><div class="🥞toast-content">${message}</div>`;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add("🥞exit");
+    }, timeout);
+    setTimeout(() => {
+      toast.remove();
+    }, timeout + 500);
+  }
   //-
   // PChome 24h
   //-
@@ -156,7 +262,7 @@
                 break;
               // case "聯強": // 不支援
               default:
-                alert(`目前不支援 ${service} 呦 ><`);
+                toast(`目前不支援 ${service} 呦 ><`);
                 break;
             }
           });

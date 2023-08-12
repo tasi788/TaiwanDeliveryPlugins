@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -145,12 +145,14 @@
   }
   @keyframes toast {
     0% {
-      transform: translateY(96px);
+      transform: translateX(100%);
       opacity: 0;
+      filter: blur(2px);
     }
     100% {
-      transform: translateY(0);
+      transform: translateX(0);
       opacity: 1;
+      filter: blur(0);
     }
   }
 `;
@@ -194,7 +196,7 @@
       return;
     }
     if (data.message === "貨物已配達") {
-      toast(`無法加入已配達的包裹`);
+      toast(`無法加入已配達的包裹`, "warn");
       return;
     }
     toast(`已將「${track_id}」加入追蹤`, "success");
@@ -235,7 +237,11 @@
   const toastContainer = document.createElement("div");
   toastContainer.className = "🥞toast-container";
   document.body.appendChild(toastContainer);
-  function toast(message, type = "info", timeout = 3000) {
+  function toast(
+    message,
+    type = "info",
+    { timeout = 3000, title = "台灣物流機器人" } = {}
+  ) {
     const toast = document.createElement("div");
     toast.className = `🥞toast 🥞toast-${type} frosted-glass`;
     if (
@@ -247,7 +253,9 @@
     let icon = `<i class='bx bx-package' ></i>`;
     if (type === "success") icon = `<i class='bx bx-check-circle' ></i>`;
     if (type === "loading") icon = `<i class='bx bx-loader bx-spin' ></i>`;
-    toast.innerHTML = `<div class="🥞toast-icon">${icon}</div><div class="🥞toast-content"><div class="🥞toast-title">台灣物流機器人</div><div class="🥞toast-message">${message}</div></div>`;
+    if (type === "error") icon = `<i class='bx bx-x' ></i>`;
+    if (type === "warn") icon = `<i class='bx bx-error' ></i>`;
+    toast.innerHTML = `<div class="🥞toast-icon">${icon}</div><div class="🥞toast-content"><div class="🥞toast-title">${title}</div><div class="🥞toast-message">${message}</div></div>`;
     toastContainer.appendChild(toast);
     let removeTimeout = setTimeout(() => {
       remove();
@@ -257,9 +265,10 @@
       let toastHeight = toast.offsetHeight;
       let toastGap = 16;
       toast.style = `
-        transform: translateY(-${toastHeight + toastGap}px) scale(0.5);
+        transform: translateX(100%);
         margin-bottom: -${toastHeight + toastGap}px;
         opacity: 0;
+        filter: blur(2px);
       `;
       toast.ontransitionend = () => {
         toast.style.display = "none";
@@ -358,7 +367,6 @@
                 "正在查詢訂單資訊⋯",
                 "loading"
               );
-              // https://shopee.tw/api/v4/order/get_order_detail?order_id=143807054231066
               let orderDetail = await fetch(
                 `https://shopee.tw/api/v4/order/get_order_detail?order_id=${orderID}`,
                 {

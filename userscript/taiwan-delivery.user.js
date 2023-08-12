@@ -147,12 +147,10 @@
     0% {
       transform: translateX(100%);
       opacity: 0;
-      filter: blur(2px);
     }
     100% {
       transform: translateX(0);
       opacity: 1;
-      filter: blur(0);
     }
   }
 `;
@@ -268,7 +266,6 @@
         transform: translateX(100%);
         margin-bottom: -${toastHeight + toastGap}px;
         opacity: 0;
-        filter: blur(2px);
       `;
       toast.ontransitionend = () => {
         toast.style.display = "none";

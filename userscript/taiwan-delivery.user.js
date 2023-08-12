@@ -134,7 +134,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.025);
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 12px;
   }
   .🥞toast-icon i{

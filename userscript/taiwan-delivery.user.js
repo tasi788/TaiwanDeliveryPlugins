@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.3.2
+// @version      0.3.3
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -11,7 +11,6 @@
 // @match        https://logistics-front.sudo.host/*
 // @match        http://localhost:5173/*
 // @icon         https://logistics-front.sudo.host/icon.jpg
-// @pancake      https://pancake.tw
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM.getValue
@@ -19,6 +18,19 @@
 // @updateURL    https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js
 // @downloadURL  https://github.com/tasi788/TaiwanDeliveryPlugins/raw/main/userscript/taiwan-delivery.user.js
 // ==/UserScript==
+//
+// $$$$$$$\   $$$$$$\  $$\   $$\  $$$$$$\   $$$$$$\  $$\   $$\ $$$$$$$$\
+// $$  __$$\ $$  __$$\ $$$\  $$ |$$  __$$\ $$  __$$\ $$ | $$  |$$  _____|
+// $$ |  $$ |$$ /  $$ |$$$$\ $$ |$$ /  \__|$$ /  $$ |$$ |$$  / $$ |
+// $$$$$$$  |$$$$$$$$ |$$ $$\$$ |$$ |      $$$$$$$$ |$$$$$  /  $$$$$\
+// $$  ____/ $$  __$$ |$$ \$$$$ |$$ |      $$  __$$ |$$  $$<   $$  __|
+// $$ |      $$ |  $$ |$$ |\$$$ |$$ |  $$\ $$ |  $$ |$$ |\$$\  $$ |
+// $$ |      $$ |  $$ |$$ | \$$ |\$$$$$$  |$$ |  $$ |$$ | \$$\ $$$$$$$$\
+// \__|      \__|  \__|\__|  \__| \______/ \__|  \__|\__|  \__|\________|
+//
+//                             蓬蓬鬆餅，美味無比
+//                           https://pancake.tw
+
 (async function () {
   // Add CSS Style
   const style = document.createElement("style");
@@ -77,6 +89,7 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 16px;
     padding: 16px;
   }
@@ -89,7 +102,7 @@
     font-family: Lato, 'Noto Sans TC', sans-serif;
     font-size: 14px;
     text-align: left;
-    transition: all 0.1s ease;
+    transition: all 0.25s ease;
     pointer-events: all;
     animation: toast 0.25s ease;
     width: 280px;
@@ -100,14 +113,17 @@
     align-items: flex-center;
     justify-content: flex-start;
     gap: 16px;
-    filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.1));
+    filter:
+      drop-shadow(2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02))
+      drop-shadow(6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028))
+      drop-shadow(12.5px 12.5px 10px rgba(0, 0, 0, 0.035))
+      drop-shadow(22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042))
+      drop-shadow(41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05))
+      drop-shadow(100px 100px 80px rgba(0, 0, 0, 0.07));
   }
   .🥞toast.🥞dark{
     background-color: rgba(0, 0, 0, 0.4);
     color: #fff;
-  }
-  .🥞toast.🥞exit{
-    animation: toast-out .5s ease;
   }
   .🥞toast-title{
     font-weight: 700;
@@ -118,7 +134,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.025);
     border-radius: 12px;
   }
   .🥞toast-icon i{
@@ -135,24 +151,6 @@
     100% {
       transform: translateY(0);
       opacity: 1;
-    }
-  }
-  @keyframes toast-out {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    50% {
-      max-height: 96px;
-      padding: 16px 24px;
-    }
-    50%, 100% {
-      transform: translateY(-96px);
-      opacity: 0;
-    }
-    100% {
-      max-height: 0;
-      padding: 0;
     }
   }
 `;
@@ -256,8 +254,14 @@
     }, timeout);
     function remove() {
       removeTimeout && clearTimeout(removeTimeout);
-      toast.classList.add("🥞exit");
-      toast.onanimationend = () => {
+      let toastHeight = toast.offsetHeight;
+      let toastGap = 16;
+      toast.style = `
+        transform: translateY(-${toastHeight + toastGap}px) scale(0.5);
+        margin-bottom: -${toastHeight + toastGap}px;
+        opacity: 0;
+      `;
+      toast.ontransitionend = () => {
         toast.style.display = "none";
         toast.remove();
       };
@@ -366,7 +370,7 @@
               let id = orderDetail.data.shipping.tracking_number;
               let shop_name =
                 orderDetail.data.info_card.parcel_cards[0].shop_info.shop_name;
-              let note = `蝦皮|${shop_name}`;
+              let note = `蝦皮 - ${shop_name}`;
               switch (carrier) {
                 case "蝦皮店到店":
                   await track("Shopeetw", id, note);

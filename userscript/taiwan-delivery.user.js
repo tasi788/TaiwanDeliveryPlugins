@@ -376,33 +376,33 @@
               let shop_name =
                 orderDetail.data.info_card.parcel_cards[0].shop_info.shop_name;
               let note = `蝦皮 - ${shop_name}`;
-              removeLoading();
               if (id === "") {
                 toast(`這筆訂單還沒有出貨`);
-                return;
+              } else {
+                switch (carrier) {
+                  case "蝦皮店到店":
+                    await track("Shopeetw", id, note);
+                    break;
+                  case "中華郵政":
+                    await track("Ipost", id, note);
+                    break;
+                  case "全家":
+                  case "全家冷凍超取(不寄送離島地區)":
+                    await track("FamiMart", id, note);
+                    break;
+                  case "萊爾富":
+                    await track("HiLife", id, note);
+                    break;
+                  case "7-ELEVEN":
+                  case "蝦皮海外 - 7-11":
+                  case "蝦皮韓國 - 7-11":
+                    await track("SevenEleven", id, note);
+                    break;
+                  default:
+                    toast(`目前不支援這家貨運商：${carrier}`);
+                }
               }
-              switch (carrier) {
-                case "蝦皮店到店":
-                  await track("Shopeetw", id, note);
-                  break;
-                case "中華郵政":
-                  await track("Ipost", id, note);
-                  break;
-                case "全家":
-                case "全家冷凍超取(不寄送離島地區)":
-                  await track("FamiMart", id, note);
-                  break;
-                case "萊爾富":
-                  await track("HiLife", id, note);
-                  break;
-                case "7-ELEVEN":
-                case "蝦皮海外 - 7-11":
-                case "蝦皮韓國 - 7-11":
-                  await track("SevenEleven", id, note);
-                  break;
-                default:
-                  toast(`目前不支援這家貨運商：${carrier}`);
-              }
+              removeLoading();
             });
             trackButtonContainer.appendChild(trackButton);
             orderItem.querySelector(".EOjXew").prepend(trackButtonContainer);

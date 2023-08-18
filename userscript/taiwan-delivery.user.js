@@ -376,6 +376,11 @@
               let shop_name =
                 orderDetail.data.info_card.parcel_cards[0].shop_info.shop_name;
               let note = `蝦皮 - ${shop_name}`;
+              removeLoading();
+              if (id === "") {
+                toast(`這筆訂單還沒有出貨`);
+                return;
+              }
               switch (carrier) {
                 case "蝦皮店到店":
                   await track("Shopeetw", id, note);
@@ -398,7 +403,6 @@
                 default:
                   toast(`目前不支援這家貨運商：${carrier}`);
               }
-              removeLoading();
             });
             trackButtonContainer.appendChild(trackButton);
             orderItem.querySelector(".EOjXew").prepend(trackButtonContainer);

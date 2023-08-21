@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         台灣物流機器人
 // @namespace    https://gnehs.net/
-// @version      0.3.6
+// @version      0.3.7
 // @description  窩可以幫尼輕鬆將包裹加入台灣物流機器人呦 ><
 // @author       gnehs
 // @website      https://logistics-front.sudo.host/
@@ -127,6 +127,9 @@
   }
   .🥞toast-title{
     font-weight: 700;
+  }
+  .🥞toast-content{
+    flex: 1;
   }
   .🥞toast-icon{
     height: 48px;
@@ -376,6 +379,13 @@
               let shop_name =
                 orderDetail.data.info_card.parcel_cards[0].shop_info.shop_name;
               let note = `蝦皮 - ${shop_name}`;
+              if (/海外|韓國|越南|馬來西亞|印尼/.test(carrier)) {
+                toast(
+                  `不支援蝦皮跨國包裹查詢，若取得台灣包裹編號，請自行至機器人查詢與追蹤。`
+                );
+                removeLoading();
+                return;
+              }
               if (id === "") {
                 toast(`這筆訂單還沒有出貨`);
               } else {
@@ -396,10 +406,6 @@
                   case "7-ELEVEN":
                     await track("SevenEleven", id, note);
                     break;
-                  case /海外|韓國|越南|馬來西亞|印尼/.test(carrier):
-                    toast(
-                      `不支援蝦皮跨國包裹查詢，若取得台灣包裹編號，請自行至機器人查詢與追蹤。`
-                    );
                   default:
                     toast(`目前不支援這家貨運商：${carrier}`);
                 }

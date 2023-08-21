@@ -394,10 +394,12 @@
                     await track("HiLife", id, note);
                     break;
                   case "7-ELEVEN":
-                  case "蝦皮海外 - 7-11":
-                  case "蝦皮韓國 - 7-11":
                     await track("SevenEleven", id, note);
                     break;
+                  case /海外|韓國|越南|馬來西亞|印尼/.test(carrier):
+                    toast(
+                      `不支援蝦皮跨國包裹查詢，若取得台灣包裹編號，請自行至機器人追蹤`
+                    );
                   default:
                     toast(`目前不支援這家貨運商：${carrier}`);
                 }

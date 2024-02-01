@@ -145,6 +145,8 @@ async function getParcelDeliveryInfo(order) {
                 serviceName = 'Okmart';
               } else if (carrierName.includes('郵局') || carrierName.includes('郵政')) {
                 serviceName = 'Ipost';
+              } else if (carrierName.includes('宅配通')) {
+                serviceName = 'Ecan';
               } else {
                 console.log(`❌ 未知的物流公司：${carrierName}`);
               }
